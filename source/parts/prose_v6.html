@@ -1,0 +1,205 @@
+  <div class="prose wrap">
+    <aside class="tldr reveal" aria-label="Summary">
+      <span class="tldr-k">At a glance</span>
+      <dl>
+        <div><dt>The problem</dt><dd>From 20 November 2026, German law prohibits the use of address data, age and several other categories in credit scores, and gives lenders new duties when they decline an application. Most lenders rely on a score supplied by a credit bureau. They did not build it and cannot inspect it, yet they remain accountable for it.</dd></div>
+        <div><dt>This project</dt><dd>A review of one real bureau score: what a bank must be able to demonstrate before adopting it, and how much of that the public record supports.</dd></div>
+        <div><dt>The answer</dt><dd><b>Not yet approvable, with a clear path to approval.</b> Two pieces of evidence decide the outcome, and the tests to apply to them are already built.</dd></div>
+        <div><dt>Key findings</dt><dd><ul>
+          <li>A criterion worth up to 94 points measures time at the current address, which the new prohibition on address data may cover.</li>
+          <li>An applicant with a clean record can reach at most 743 after one year, and needs two to five years to reach the top class.</li>
+          <li>From 20 November, lenders take on new notification duties when they decline an applicant.</li>
+        </ul></dd></div>
+        <div><dt>What I built</dt><dd>A Python pipeline: an evidence register, a tested points calculator, decision rules applied in code, and an outcome test kit run on 303,949 loans.</dd></div>
+      </dl>
+    </aside>
+
+    <h2 class="reveal">Context</h2>
+    <p>On 20 November 2026, a new provision of Germany's Federal Data Protection Act, <cite>§37a BDSG</cite>, takes effect. It prohibits the use of age, gender, name, bank account transaction data and address data, among other categories, in credit scores. At the same time, an amended <cite>§30 BDSG</cite> requires lenders that decline an application on the basis of bureau information to tell the applicant more about that decision. In October, the Federal Court of Justice also clarified when a bureau must explain an individual score.</p>
+    <p>Most banks do not build their own credit scores; they license them from a bureau. That raises a practical question for any lender: what must it be able to demonstrate before adopting a new bureau score, and how much of that can be verified from public information alone? This case study answers that question for one score.</p>
+
+    <section class="wide figures reveal" aria-label="Key figures">
+      <div><div class="n" data-count="94">94</div><div class="l">Points from time at the current address, the criterion the address-data prohibition calls into question</div></div>
+      <div><div class="n" data-count="743">743</div><div class="l">Highest score attainable after one year in the German credit file with a clean record</div></div>
+      <div><div class="n">2 to 5 yrs</div><div class="l">Time required for that applicant to reach the top score class</div></div>
+      <div><div class="n warn" data-count="2">2</div><div class="l">Pieces of evidence that decide adoption</div></div>
+    </section>
+
+    <h2 class="reveal">The score under review</h2>
+    <p>In March 2026, a large German credit bureau replaced its existing scores with a single score based on twelve published criteria, on a scale of 100 to 999. Every lender that uses it must decide whether to adopt it and how to recalibrate its cut-offs.</p>
+    <p>The review uses a fictional lender, Mainkai Direktbank: a Frankfurt-based direct bank that would use the score to approve, price and size unsecured personal loans across roughly 120,000 applications a year. The bureau is real but is not named.</p>
+
+    <h2 class="reveal">Why it matters for lenders</h2>
+    <p>Under German supervisory rules, responsibility for a vendor model stays with the bank. <cite>MaRisk AT 4.3.4</cite> extends model governance to models developed by third parties, with requirements on suitability, data quality, validation and explainability. <cite>BTO 1.2 Tz. 5</cite> further requires a bank to form its own view of credit risk rather than rely solely on external assessments.</p>
+    <p>This bureau is unusually transparent: it publishes every criterion and the points assigned to each. That makes it a useful test of a common assumption in vendor oversight, that a transparent model is also an adequately evidenced one. The bureau publishes no model card, validation report or outcome data, and the review examines what that gap means for a lender.</p>
+
+    <h2 class="reveal">Approach</h2>
+    <p>The review was built in four parts.</p>
+    <dl class="approach">
+      <div class="reveal"><span class="k">01</span><dt>Evidence register</dt><dd>49 sources and 30 claims, each classified as a sourced fact or an assessment. The statute and the BaFin circular are held as original documents with file hashes, so anyone can confirm they are unchanged.</dd></div>
+      <div class="reveal" style="--d:0.06s"><span class="k">02</span><dt>Points calculator</dt><dd>The published points table is implemented in code and tested to confirm that the scale runs from 100 to 999 and that points move in the expected direction. Where the bureau does not publish intermediate values, the calculator reports lower and upper bounds rather than estimates.</dd></div>
+      <div class="reveal" style="--d:0.12s"><span class="k">03</span><dt>Outcome testing</dt><dd>No outcome data are public for this score, so the tests a lender should require were run on 303,949 loans from Bondora, an Estonian lender. The results demonstrate the tests; they do not describe the bureau's score.</dd></div>
+      <div class="reveal" style="--d:0.18s"><span class="k">04</span><dt>Decision rules</dt><dd>Four outcomes (reject, defer, approve with conditions, approve) are applied in code to the rated findings, so the recommendation follows from the evidence rather than a final judgement call.</dd></div>
+    </dl>
+
+    <h2 class="reveal">Findings</h2>
+
+    <h3>The address criterion and §37a</h3>
+    <p><cite>§37a(2) No. 1(d)</cite> prohibits the use of address data ("Anschriftendaten") in scores. One criterion, time at the current address, contributes up to 94 points. On a broad reading, residence time is derived from address data and falls within the prohibition. On a narrower reading, the provision targets location-based scoring, and residence time is a measure of stability. No court has yet ruled on the point.</p>
+    <div class="callout reveal">This is not treated as a breach. It is rated High, escalating to Critical if the bureau retains the criterion and the bank's counsel adopts the broader reading.</div>
+
+    <h3>A structural ceiling for thin credit files</h3>
+    <p>Time-dependent criteria account for 280 of the 999 points. An applicant with a clean payment record and no mortgage can reach at most 743 after one year in the German credit file, which falls in Class 2. Reaching Class 1 takes between two and five years; the published table does not support a narrower estimate.</p>
+
+    <figure class="ruler wide reveal" aria-label="Score scale with class bands">
+      <svg viewBox="0 0 1000 112" role="img" aria-labelledby="ruler-t">
+        <title id="ruler-t">The 100 to 999 scale with its four classes; the one-year ceiling of 743 sits in Class 2, 33 points below Class 1.</title>
+        <rect x="0" y="46" width="602.9" height="22" rx="4" fill="var(--band-4)"/>
+        <rect x="602.9" y="46" width="74.5" height="22" fill="var(--band-3)"/>
+        <rect x="677.4" y="46" width="74.6" height="22" fill="var(--band-2)"/>
+        <rect x="752.0" y="46" width="248.0" height="22" rx="4" fill="var(--band-1)"/>
+        <g class="marker">
+          <line x1="715.2" y1="30" x2="715.2" y2="74" stroke="var(--warn)" stroke-width="2.5"/>
+          <circle cx="715.2" cy="30" r="4.5" fill="var(--warn)"/>
+        </g>
+        <text x="705" y="22" text-anchor="end" class="t-mark">743: highest score after one year</text>
+        <text x="301" y="88" text-anchor="middle">Class 4 · 100 to 641</text>
+        <text x="640" y="88" text-anchor="middle">3</text>
+        <text x="715" y="88" text-anchor="middle" class="t-strong">2</text>
+        <text x="876" y="88" text-anchor="middle">Class 1 · 776 to 999</text>
+        <text x="0" y="106" text-anchor="start">100</text>
+        <text x="603" y="106" text-anchor="middle">642</text>
+        <text x="752" y="106" text-anchor="middle">776</text>
+        <text x="1000" y="106" text-anchor="end">999</text>
+      </svg>
+      <figcaption>The score scale drawn to scale, with the bureau's four classes. An applicant with a clean record remains in Class 2 after one year.</figcaption>
+    </figure>
+
+    <figure class="ceil reveal" id="ceil">
+      {{SVG_CEILING}}
+      <p class="note">X axis: years in the credit file. Dashed lines: Class 2 from 709, Class 1 from 776.</p>
+      <figcaption>Highest score the published table allows over time, for an applicant with a clean record and no mortgage. The bureau publishes points only at set durations, so the true path lies within the shaded band.</figcaption>
+    </figure>
+    <p>Lower scores for short credit histories are expected by design. The relevant question is whether the score is calibrated within these groups: whether a given score implies the same default risk for younger applicants and recent arrivals as for the wider population. No public evidence addresses this.</p>
+
+    <h3>The lender's own product affects its customers' scores</h3>
+    <p>In the calculator, a 60-month Mainkai loan reduces the borrower's score by 78 to 88 points through three criteria. This has implications for top-up lending and for how customers are told about the effect of loan term on their credit standing.</p>
+
+    <h3>Aggregate metrics can conceal deterioration</h3>
+    <p>On the Bondora data, rank ordering failed at the riskier end of the scale, where an automatic decline cut-off would typically sit. In 2025, grade F (17.6% default rate, 1,309 loans) defaulted less often than grade E (19.6%). Seven of eight grades deteriorated against the reference period, while the overall default rate held broadly stable (8.3% against 8.6%) because the mix shifted towards the best grade. Across customer segments, observed defaults ranged from 0.72 to 2.34 times the level implied by the grade.</p>
+    <figure class="reveal">
+      <div class="plate"><img src="{{IMG_RANK}}" alt="Bar chart: 12-month default rate by Bondora grade AA to G, reference period against 2025. In 2025 grade F defaults less than grade E." loading="lazy"></div>
+      <figcaption>Default rate by grade, reference period (2024 Q2 to Q4) against 2025 Q1 to Q3. Proxy data from a different lender: the chart illustrates the test, not the bureau's score.</figcaption>
+    </figure>
+
+    <h3>Lender obligations under §30(7)</h3>
+    <p>From 20 November, the amended <cite>§30(7)</cite> introduces two notification duties. Where a consumer loan is declined on the basis of bureau information, the lender must tell the applicant what that information was, which database it came from and which data categories were used. Where the decision is automated, the lender must also explain the right to human review and how to contest the decision. Failure to inform is an administrative offence under <cite>§43(1) No. 2</cite>. This finding is rated High.</p>
+
+    <h2 class="reveal">Recommendation: a path to approval</h2>
+    <p>On public evidence alone, the score is not yet approvable. That is not a judgement against the score. The review applies a ratability test in code: a core element can be rated only where a result is visible in the evidence, such as a reported metric, a published table or a stated review conclusion. A description of a process is not sufficient. Data, methodology, testing and external review each meet this test. Outcome analysis on the bank's own applicants does not, so the decision rules return "defer pending evidence".</p>
+    <p>The more useful output is what would change that outcome. Running the same rules on two hypothetical scenarios shows that the decision turns on two pieces of evidence:</p>
+    <div class="paths wide reveal">
+      <div class="path now"><span class="tag">Today</span><b>Public evidence only</b><p>Outcomes on the bank's own applicants cannot be rated.</p><span class="res">Defer pending evidence</span></div>
+      <div class="path go"><span class="tag">Evidence 1<span class="syn">hypothetical</span></span><b>The bureau supplies a retrospective score</b><p>The new score shows no material loss of discrimination against the incumbent score on the same applicants.</p><span class="res">Approve with conditions</span></div>
+      <div class="path stop"><span class="tag">Evidence 2<span class="syn">hypothetical</span></span><b>The address criterion is retained</b><p>The bureau keeps it, and the bank's counsel treats it as address data under §37a.</p><span class="res">Reject</span></div>
+    </div>
+    <p>Both are specific and obtainable. The first is a standard request in a vendor model review: the bureau scores 24 to 36 months of the bank's past applications with both the new and the current score. The second is a written position from the bureau and a legal opinion from the bank's counsel. Both are set out in the accompanying evidence request, as items E02 and E01.</p>
+
+    <h3>The test kit is ready</h3>
+    <p>The outcome tests do not need to be designed once the retrospective score arrives. They are built and run end to end on the Bondora data, so the same code can be applied to the bank's own file:</p>
+    <ul class="ticks">
+      <li><b>Champion and challenger.</b> A paired comparison of discrimination (the Gini coefficient, which measures how well a score separates good loans from bad) on the same applicants, passed if the new score loses no more than 3 Gini points. On the proxy data, a strong score (0.37) against a weak one (0.18) gives a difference of +0.20, with an interval of +0.19 to +0.21: a clear pass.</li>
+      <li><b>Out-of-time discrimination.</b> The same measure on a later period than the one used for calibration.</li>
+      <li><b>Rank ordering and calibration.</b> Default rates by score band with confidence intervals, flagging any band that defaults less than the band above it.</li>
+      <li><b>Segment calibration.</b> Observed against expected defaults by customer segment. On the proxy these are country, age band and similar fields; on the bank's file they would include young applicants and thin-file customers.</li>
+      <li><b>Stability.</b> Population stability by quarter, measured against a stable reference window.</li>
+    </ul>
+    <p>When the evidence arrives, the review resumes from a defined point: run the tests, re-rate the outcomes element, and let the same rules return the decision.</p>
+
+    <h2 class="reveal">Revisions to the method</h2>
+    <div class="table-wrap reveal">
+      <table>
+        <thead><tr><th>Initial approach</th><th>Revised approach</th><th>Rationale</th></tr></thead>
+        <tbody>
+          <tr><td>A fixed threshold of 0.55 Gini on the bank's loans</td><td>No loss of more than 3 Gini points against the incumbent score on the same applicants</td><td>A Gini measured on one lender's applicants is lower than a bureau-wide figure by construction, so a fixed threshold can reject a sound score</td></tr>
+          <tr><td>Reference period 2023 Q3 to 2024 Q4</td><td>2024 Q2 to Q4</td><td>The longer window combined two rating regimes and overstated drift by about a third</td></tr>
+          <tr><td>Figures entered manually in the report</td><td>All figures generated from the data at build time</td><td>An internal review found three figures that no longer matched the data</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="reveal" id="build">How it was built</h2>
+    <p>The review is a reproducible Python project rather than a document. Every figure, rating and recommendation is produced by code from the evidence and the data, so a change to a source or a threshold flows through to the report automatically. The pipeline runs in six stages:</p>
+    <ol class="pipe wide reveal">
+      <li><b>Sources</b><span>Statute, MaRisk circular, bureau pages, case law, commentary</span></li>
+      <li><b>Evidence register</b><span>49 sources and 30 claims, SHA-256 hashed</span></li>
+      <li><b>Calculator lab</b><span>Points table encoded and tested</span></li>
+      <li><b>Outcomes lab</b><span>303,949 Bondora loans, aggregates only</span></li>
+      <li><b>Decision engine</b><span>Typed findings, rules 1 to 4, scenarios</span></li>
+      <li><b>Outputs</b><span>Review, memo, crosswalk, calculator, CSVs</span></li>
+    </ol>
+
+    <h3>Engineering</h3>
+    <ul class="ticks">
+      <li><b>Typed data model.</b> Findings, crosswalk elements and obligations are pydantic models with validators, so an invalid review cannot be built. The ratability test, for example, is enforced in the model itself:</li>
+    </ul>
+    <pre class="code reveal"><code><span class="c"># src/assurance/models.py</span>
+<span class="k">@model_validator</span>(mode=<span class="s">"after"</span>)
+<span class="k">def</span> <span class="f">_ratability_test</span>(self):
+    <span class="k">if</span> self.core <span class="k">and</span> self.ratable != bool(self.visible_result.strip()):
+        <span class="k">raise</span> ValueError(<span class="s">f"element {self.element}: core elements are ratable "</span>
+                         <span class="s">"if and only if a visible result is recorded"</span>)
+    <span class="k">return</span> self</code></pre>
+    <ul class="ticks">
+      <li><b>Figures generated, not typed.</b> Report text carries tokens such as <code>[[ceiling_12m]]</code> that are filled from the lab outputs at build time, and the build fails if any token is left unfilled.</li>
+      <li><b>Evidence integrity.</b> Each source records a SHA-256 hash of the excerpt relied on and, where the original document is held, of the file itself.</li>
+      <li><b>Testing.</b> 53 pytest tests cover the calculator, the outcome harness and the decision rules.</li>
+      <li><b>Rendering.</b> Jinja2 templates produce the HTML and Playwright prints the PDFs. The interactive calculator is a single self-contained HTML file.</li>
+    </ul>
+
+    <h3>Statistics</h3>
+    <ul class="ticks">
+      <li><b>Discrimination.</b> Gini (2 × AUC − 1) with 200-draw bootstrap intervals, out of time.</li>
+      <li><b>Champion and challenger.</b> A paired bootstrap of the Gini difference on the same applicants, against a 3-point material-loss tolerance.</li>
+      <li><b>Stability.</b> Population stability index by quarter, with a structural-break check on the reference window.</li>
+      <li><b>Calibration.</b> Default rates with Wilson intervals by grade, and observed against expected by customer segment.</li>
+      <li><b>Privacy.</b> Cells with fewer than 30 loans are suppressed, and no loan-level data is published.</li>
+    </ul>
+
+    <div class="stack reveal" aria-label="Tools used">
+      <span>Python 3.14</span><span>pandas</span><span>NumPy</span><span>SciPy</span><span>pydantic</span><span>matplotlib</span><span>Jinja2</span><span>Playwright</span><span>pytest</span><span>GitHub Actions</span>
+    </div>
+
+    <h3>Skills the project demonstrates</h3>
+    <div class="skills reveal">
+      <div><b>Model risk</b><p>Vendor model review against MaRisk AT 4.3.4, SR 26-2 and PRA SS1/23; out-of-time testing; champion and challenger design; tolerance setting.</p></div>
+      <div><b>Third-party risk</b><p>Evidence requests, an obligation matrix, an outsourcing assessment and a decision memo with conditions.</p></div>
+      <div><b>Regulatory analysis</b><p>Working from statute and case law, weighing competing interpretations, and translating legal duties into testable controls.</p></div>
+      <div><b>Data and engineering</b><p>Python, statistical testing, reproducible pipelines, automated tests and document generation.</p></div>
+    </div>
+
+    <h2 class="reveal">Lessons</h2>
+    <div class="lessons">
+      <p class="reveal"><b>Absolute thresholds are unsuitable for vendor scores.</b> The bureau reports a Gini of around 0.6 across its full population. On a single lender's applicants the figure will be lower regardless of model quality, so the appropriate test is a paired comparison with the incumbent score on the same applicants.</p>
+      <p class="reveal"><b>Drift measures depend on a stable baseline.</b> The original reference period combined two rating regimes, which became apparent only when the data were examined quarter by quarter.</p>
+    </div>
+
+    <div class="limits reveal"><b>Limitations</b>This is a method demonstration based on public evidence. The review had no access to the bureau's data, code or contracts. The Bondora results describe a different lender and population; only aggregates covering at least 30 loans are shown, and the raw data are not shared. The findings, ratings and tolerances reflect the author's judgement.</div>
+
+    <h2 class="reveal" id="ireland">The same review in Ireland</h2>
+    <p>The German changes take effect on the same day that the revised EU Consumer Credit Directive (<cite>Directive (EU) 2023/2225</cite>) begins to apply across member states, 20 November 2026. An Irish lender adopting a vendor score would face many of the same questions under a different supervisory framework. The method transfers unchanged; the legal anchors do not.</p>
+    <div class="table-wrap reveal">
+      <table>
+        <thead><tr><th>Topic</th><th>Germany (this review)</th><th>Ireland</th></tr></thead>
+        <tbody>
+          <tr><td>Data that may not be used</td><td>§37a BDSG: age, gender, name, account transactions, address data and other categories</td><td>CCD2 Art. 18: no special-category data and no social-network data, and the assessment may not rest on credit history alone. The address question is specific to §37a.</td></tr>
+          <tr><td>Explanation and human review</td><td>§30(7) BDSG notice duties when a loan is refused</td><td>CCD2 Art. 18: where the assessment is automated, a right to human review and a clear explanation</td></tr>
+          <tr><td>Status of the rules</td><td>In force from 20 November 2026</td><td>CCD2 takes effect through national law. At the time of writing I could not confirm that Ireland's law has been published.</td></tr>
+          <tr><td>Credit data</td><td>Private bureau score, 100 to 999</td><td>The Central Credit Register reports credit data but produces no score; any score comes from a private provider or the lender itself</td></tr>
+          <tr><td>Supervisor's rules</td><td>BaFin MaRisk AT 4.3.4, AT 9, BTO 1.2</td><td>Central Bank of Ireland: revised Consumer Protection Code in force since 24 March 2026; outsourcing guidance and DORA for third-party and ICT arrangements</td></tr>
+          <tr><td>AI Act</td><td colspan="2">Credit scoring is high-risk under Annex III 5(b) in both countries. Following the AI Omnibus, these obligations are reported to apply from 2 December 2027.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>In an Irish version of this review, the address finding would fall away, the notification finding would be re-based on the directive's rights to explanation and human review, and the governance findings would be mapped to Central Bank expectations rather than MaRisk. The ratability test, the champion and challenger comparison and the segment calibration tests would apply as they stand.</p>
+  </div>

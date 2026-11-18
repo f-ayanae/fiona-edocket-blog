@@ -1,0 +1,21 @@
+
+/* scroll cue at the foot of the hero */
+.bleed-row { position: relative; }
+.bleed-cue { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; background: none; border: 0; color: rgba(255,255,255,.8); font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; padding: 4px 8px; }
+.bleed-cue i { width: 1px; height: 34px; background: linear-gradient(rgba(255,255,255,.85), rgba(255,255,255,0)); transform-origin: top; animation: cue 2.2s var(--ease) infinite; }
+@keyframes cue { 0% { transform: scaleY(0); opacity: 1; } 60% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+@media (hover: hover) { .bleed-cue:hover { color: #fff; } }
+@media (max-width: 640px) { .bleed-cue { display: none; } }
+@media (prefers-reduced-motion: reduce) { .bleed-cue i { animation: none; } }
+#latest { padding-top: 2.2rem; }
+
+/* Latest feed: dated rows */
+.sect-note { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.feed { list-style: none; margin: 0; padding: 0; }
+.feed li { border-bottom: 1px solid var(--rule); }
+.feed a { display: grid; grid-template-columns: 8.5rem 8rem minmax(0, 1fr) auto; gap: 0 1.2rem; align-items: baseline; padding: 1rem 0; text-decoration: none; color: inherit; }
+.feed .f-date, .feed .f-kind { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.feed b { font-family: var(--display); font-weight: 400; font-size: clamp(1.25rem, 2.2vw, 1.6rem); line-height: 1.15; letter-spacing: -0.005em; }
+.feed i { font-style: normal; font-size: 0.85rem; color: var(--muted); transition: transform .3s var(--ease); }
+@media (hover: hover) { .feed a:hover b { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; } .feed a:hover i { transform: translate(2px, -2px); color: var(--ink); } }
+@media (max-width: 640px) { .feed a { grid-template-columns: auto 1fr; gap: 0.3rem 0.8rem; } .feed b { grid-column: 1 / -1; } .feed i { display: none; } }

@@ -1,0 +1,34 @@
+
+/* ===== Colour accents drawn from the hero image (chosen 18 Nov 2026) ===== */
+:root { --soft: #f6f2ee; --slate: #5c5f80; --peach: #c98f73; }
+.bleed { background: #6f6670; }
+.bleed::after { background: linear-gradient(180deg, rgba(28,24,38,.40) 0%, rgba(28,24,38,0) 26%, rgba(28,24,38,0) 58%, rgba(40,28,30,.42) 100%); }
+.sect-head .dot { background: var(--slate); }
+.annc { background: #f6f2ee; }
+.tile-bg { background: var(--soft); }
+.nfeature .nf-text, .nthumb { background: var(--soft); }
+.quiet p { color: var(--ink); }
+@media (hover: hover) {
+  .feed a:hover b, .pcard:hover b { text-decoration-color: var(--slate); }
+  .feed a:hover i { color: var(--slate); }
+  .tile:hover .arrow { background: var(--slate); border-color: var(--slate); color: #fff; }
+  .f-col a:hover, .elsewhere a:hover, .sect-head a:hover { color: var(--slate); }
+}
+.mast nav a.on { text-decoration-color: var(--peach); }
+body.home .mast nav a.on { text-decoration-color: #e8c4ae; }
+.tldr { border-top-color: var(--slate) !important; }
+.callout { border-left-color: var(--peach) !important; }
+
+/* Posts: source line and quotes */
+#nBody .src { margin-top: 2.4em; padding-top: 1em; border-top: 1px solid var(--rule, #ddd); font-size: .85em; color: #666; }
+#nBody blockquote { margin: 1.2em 0; padding-left: 1em; border-left: 2px solid var(--peach, #c98f73); font-style: italic; }
+
+/* Latest list and project tiles: a size smaller (18 Nov 2026) */
+.feed a { padding: 0.75rem 0; }
+.feed b { font-size: clamp(1.05rem, 1.6vw, 1.25rem); }
+.tile-bg { aspect-ratio: 16 / 9; }
+.cover { width: 30%; }
+.cover-title { font-size: clamp(12px, 1.25vw, 17px); }
+.cover-top { font-size: clamp(5px, 0.5vw, 7px); }
+.tile-foot p { font-size: 0.86rem; }
+@media (max-width: 760px) { .tile-bg { aspect-ratio: auto; padding: 1.8rem 0 1.2rem; } .cover { width: 44%; } .cover-title { font-size: 15px; } }

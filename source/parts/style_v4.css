@@ -1,0 +1,61 @@
+
+/* ================= Version 4: editorial white blog ================= */
+:root { --mono: "Geist Mono", ui-monospace, "Cascadia Mono", Consolas, monospace; --hero: none; }
+body { background: #fff; }
+.mast .wrap { grid-template-columns: 1fr auto 1fr; }
+.kick { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+/* hero image (Fiona will supply the final image) */
+.hero-wrap { padding-top: 1.6rem; padding-bottom: 2.6rem; }
+.hero-img { position: relative; aspect-ratio: 21 / 8; border-radius: 18px; overflow: hidden;
+  background: var(--hero) center / cover no-repeat, radial-gradient(70% 90% at 85% 10%, rgba(38,73,216,.16), rgba(38,73,216,0) 60%), radial-gradient(60% 80% at 10% 100%, rgba(176,52,106,.10), rgba(176,52,106,0) 60%), linear-gradient(180deg, #F5F7FB, #EEF2F8); }
+.hero-img::after { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgba(38,73,216,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(38,73,216,.07) 1px, transparent 1px); background-size: 48px 48px; -webkit-mask-image: linear-gradient(to top, #000, transparent 85%); mask-image: linear-gradient(to top, #000, transparent 85%); }
+.hero-img.has-img::after, .hero-img.has-img .hero-mark { display: none; }
+.hero-mark { position: absolute; left: 1.4rem; bottom: 1.2rem; z-index: 1; display: inline-flex; align-items: center; gap: 0.6rem; font-size: 0.9rem; font-weight: 500; color: var(--ink-2); }
+.hero-mark i { width: 28px; height: 28px; border-radius: 8px; background: var(--blue); color: #fff; font-style: normal; font-size: 0.72rem; font-weight: 700; display: grid; place-items: center; }
+@media (max-width: 640px) { .hero-img { aspect-ratio: 4 / 3; border-radius: 14px; } }
+
+/* page heads without bubbles */
+.page-head { padding-top: 3rem; padding-bottom: 2rem; }
+.page-head h1 { font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1; letter-spacing: -0.04em; font-weight: 600; margin: 0 0 1rem; }
+.page-head p { color: var(--ink-2); max-width: 38rem; margin: 0; font-size: 1.05rem; }
+.tabs { display: flex; gap: 1.2rem; margin-top: 1.8rem; border-bottom: 1px solid var(--rule); }
+.tabs button { font: inherit; font-size: 0.88rem; background: none; border: 0; padding: 0 0 0.6rem; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.tabs button.on { color: var(--ink); border-bottom-color: var(--ink); }
+
+/* project cards */
+.pgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.2rem 1.6rem; }
+@media (max-width: 760px) { .pgrid { grid-template-columns: minmax(0, 1fr); } }
+.pcard, .ncard { display: flex; flex-direction: column; gap: 0.45rem; text-decoration: none; color: inherit; }
+.pcard .thumb, .ncard .thumb { margin-bottom: 0.5rem; border-radius: 10px; }
+.thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pcard b { font-size: 1.45rem; font-weight: 600; letter-spacing: -0.025em; line-height: 1.2; }
+.pcard em { font-style: normal; color: var(--ink-2); font-size: 0.97rem; line-height: 1.6; }
+.pcard i { font-style: normal; font-size: 0.88rem; font-weight: 500; color: var(--blue); margin-top: 0.3rem; transition: transform 0.3s var(--ease); align-self: flex-start; }
+@media (hover: hover) { .pcard:hover i, .ncard:hover small { transform: translateX(3px); } .pcard:hover .cov-svg .mo, .ncard:hover .cov-svg .mo { transform: rotate(14deg) scale(1.04); } .pcard:hover .cov-svg .mk, .ncard:hover .cov-svg .mk { transform: translateX(-18px); } .pcard:hover b, .ncard:hover b, .nfeature:hover b { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; } }
+
+/* news */
+.ngrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem 1.5rem; }
+@media (max-width: 900px) { .ngrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .ngrid { grid-template-columns: minmax(0, 1fr); } }
+.ncard b { font-size: 1.12rem; font-weight: 600; letter-spacing: -0.015em; line-height: 1.3; }
+.ncard em { font-style: normal; color: var(--ink-2); font-size: 0.93rem; line-height: 1.55; }
+.ncard small { font-size: 0.8rem; color: var(--muted); transition: transform 0.3s var(--ease); }
+.nfeature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 0; text-decoration: none; color: inherit; background: var(--soft); border-radius: 14px; overflow: hidden; margin-bottom: 2.4rem; }
+.nfeature .nf-text { display: flex; flex-direction: column; justify-content: center; gap: 0.6rem; padding: 2rem; }
+.nfeature b { font-size: clamp(1.4rem, 2.6vw, 2rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; }
+.nfeature em { font-style: normal; color: var(--ink-2); }
+.nfeature small { font-size: 0.84rem; color: var(--blue); font-weight: 500; }
+.nfeature .thumb { border-radius: 0; }
+@media (max-width: 760px) { .nfeature { grid-template-columns: minmax(0, 1fr); } .nfeature .thumb { order: -1; } }
+.empty { display: flex; flex-direction: column; gap: 0.3rem; border: 1px dashed var(--rule-2); border-radius: 14px; padding: 2.2rem 1.6rem; text-align: center; color: var(--muted); }
+.empty b { color: var(--ink); font-weight: 600; }
+.nimg { width: 100%; border-radius: 14px; }
+
+/* about: GitHub next to LinkedIn */
+.about-page .btn { margin-right: 0.5rem; margin-top: 0.4rem; }
+.btn.ghostbtn { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 1px var(--rule-2); }
+@media (hover: hover) { .btn.ghostbtn:hover { background: var(--soft); box-shadow: inset 0 0 0 1px var(--ink); } }
+
+/* footer */
+footer.site .flinks { display: inline-flex; gap: 1.2rem; }

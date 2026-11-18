@@ -1,0 +1,7 @@
+# private design notes
+source/INSPIRATION_PROMPTS.md
+# build outputs
+source/blog_v5.src.html
+source/fiona-edocket.html
+__pycache__/
+.vercel

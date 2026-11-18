@@ -1,0 +1,4 @@
+# only index.html is the website; keep sources off the public site
+source/
+archive/
+README.md
