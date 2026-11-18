@@ -5,3 +5,17 @@ source/blog_v5.src.html
 source/fiona-edocket.html
 __pycache__/
 .vercel
+# kept on this computer only: earlier versions and files the build does not use
+archive/
+source/posts/
+source/hero.jpg
+source/hero_spheres_full.jpg
+source/render_spheres_colour.py
+source/parts/data_v4.js
+source/parts/prose_v4.html
+source/parts/ring.css
+source/parts/script.html
+source/parts/style.css
+source/parts/style_latest.css
+source/parts/style_v4.css
+source/parts/views.html

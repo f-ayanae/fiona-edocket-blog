@@ -17,7 +17,7 @@ Where to make common edits:
 
 | To change | Edit |
 |---|---|
-| A blog post | Write it as a file in `source/posts/`, add it to the `NEWS` list in `source/parts/data_v5.js`, and put its thumbnail in `source/` |
+| A blog post | Add it to the `NEWS` list in `source/parts/data_v5.js` and put its thumbnail in `source/` |
 | A project | Add it to the `PROJECTS` list in `source/parts/data_v5.js` |
 | About text, the landing line, the case study wording | `source/v6_edits.py` and `source/parts/prose_v6.html` |
 
